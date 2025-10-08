@@ -575,6 +575,34 @@
       color: var(--gray);
       font-size: 0.85rem;
     }
+
+    .load-more-container {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 1.5rem 0;
+    }
+
+    .load-more-btn {
+        padding: 0.75rem 2rem;
+        background-color: var(--secondary);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: var(--transition);
+    }
+
+    .load-more-btn:hover {
+        background-color: #d1196e;
+        transform: translateY(-2px);
+    }
+
+    .load-more-btn:disabled {
+        background-color: var(--gray);
+        cursor: not-allowed;
+    }
+
   </style>
 </head>
 <body>
@@ -718,6 +746,7 @@
       currentlyPlaying: null,
       isLoading: false,
       youtubeSearchType: 'video',
+      youtubeNextPageToken: null, // حالة جديدة لتخزين مفتاح الصفحة التالية
       counts: {
         all: 0,
         image: 0,
@@ -760,7 +789,6 @@
 
     // Constants
     const BATCH_SIZE = 12;
-    // تذكير: المفتاح مرئي هنا. لأغراض التعليم هذا جيد، لكن يُفضل استخدام خادم خلفي للإنتاج.
     const YOUTUBE_API_KEY = 'AIzaSyBI5_bMERLQgiMHNcQCOHreTT6Kzzu_D2I'; 
     const MAX_YOUTUBE_RESULTS = 50; 
 
@@ -793,10 +821,13 @@
 
       document.getElementById('searchInput').addEventListener('input', filterLocalMediaGrid);
 
-      elements.youtubeSearchButton.addEventListener('click', executeYoutubeSearch);
+      // ربط زر البحث بالوظيفة الأساسية (البحث عن الصفحة الأولى)
+      elements.youtubeSearchButton.addEventListener('click', () => {
+          executeYoutubeSearch(true); // true لـ resetPage
+      });
       elements.youtubeSearchInput.addEventListener('keypress', (e) => {
           if (e.key === 'Enter') {
-              executeYoutubeSearch();
+              executeYoutubeSearch(true); // true لـ resetPage
           }
       });
       
@@ -810,7 +841,7 @@
               
               const query = elements.youtubeSearchInput.value.trim();
               if (query) {
-                  executeYoutubeSearch();
+                  executeYoutubeSearch(true); // true لـ resetPage عند تغيير الفلتر
               }
           });
       });
@@ -825,7 +856,7 @@
       });
     }
 
-    // --- وظائف يوتيوب ---
+    // --- وظائف يوتيوب المُعدَّلة لدعم التصفح اللانهائي ---
 
     function updateYoutubeFiltersUI(activeType) {
         Array.from(elements.youtubeFilters.children).forEach(button => {
@@ -833,10 +864,17 @@
         });
     }
 
-    function executeYoutubeSearch() {
+    function executeYoutubeSearch(resetPage = false) {
         const query = elements.youtubeSearchInput.value.trim();
+        
+        if (resetPage) {
+            state.youtubeNextPageToken = null; // إعادة تعيين المفتاح للبحث الجديد
+        }
+
+        const pageToken = resetPage ? null : state.youtubeNextPageToken;
+
         if (query) {
-            searchYoutube(query, state.youtubeSearchType); 
+            searchYoutube(query, state.youtubeSearchType, pageToken, resetPage); 
         } else {
              elements.youtubeResultsGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--gray);">الرجاء إدخال كلمة بحث.</div>';
              state.counts.youtube = 0;
@@ -855,18 +893,37 @@
           renderMediaGrid();
       } else {
           updateYoutubeFiltersUI(state.youtubeSearchType);
-          elements.youtubeResultsGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--gray);">ابدأ البحث في يوتيوب...</div>';
-          state.counts.youtube = 0;
+          
+          // عرض النتائج السابقة إذا كانت موجودة، وإلا عرض رسالة البداية
+          if (state.counts.youtube === 0) {
+              elements.youtubeResultsGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--gray);">ابدأ البحث في يوتيوب...</div>';
+          }
+          // إذا كانت هناك نتائج سابقة، نتركها كما هي ونعرض فقط زر "تحميل المزيد"
+          
           updateUI();
       }
     }
 
-    async function searchYoutube(query, type) {
-        elements.youtubeResultsGrid.innerHTML = elements.loadingSpinner.outerHTML;
-        elements.loadingSpinner.style.display = 'flex';
+    async function searchYoutube(query, type, pageToken, isNewSearch) {
+        // إخفاء زر "تحميل المزيد" أثناء التحميل
+        const loadMoreBtn = document.getElementById('loadMoreYoutube');
+        if (loadMoreBtn) loadMoreBtn.style.display = 'none';
         
-        // بناء رابط الـ URL مع maxResults=50 ونوع البحث المحدد
-        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=${type}&key=${YOUTUBE_API_KEY}&maxResults=${MAX_YOUTUBE_RESULTS}`;
+        // عرض مؤشر التحميل. إذا كان بحثاً جديداً، نظهر فقط المؤشر
+        if (isNewSearch) {
+            elements.youtubeResultsGrid.innerHTML = elements.loadingSpinner.outerHTML;
+        } else {
+             // إذا كان تحميل المزيد، نستخدم المؤشر الموجود في الـ DOM
+             elements.loadingSpinner.style.display = 'flex';
+        }
+        
+        // بناء رابط الـ URL
+        let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=${type}&key=${YOUTUBE_API_KEY}&maxResults=${MAX_YOUTUBE_RESULTS}`;
+        
+        // إضافة مفتاح الصفحة إذا كان متوفراً
+        if (pageToken) {
+            url += `&pageToken=${pageToken}`;
+        }
         
         try {
             const response = await fetch(url);
@@ -874,22 +931,44 @@
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            displayYoutubeResults(data.items, type);
+            
+            // تحديث مفتاح الصفحة التالية
+            state.youtubeNextPageToken = data.nextPageToken || null; 
+
+            displayYoutubeResults(data.items, type, isNewSearch);
             elements.loadingSpinner.style.display = 'none';
+
         } catch (error) {
             console.error('Error fetching YouTube data:', error);
-            elements.youtubeResultsGrid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: red;">❌ تعذر تحميل نتائج يوتيوب. تأكد من اتصالك بالإنترنت ومن صحة مفتاح الـ API.</div>`;
+            if (isNewSearch) {
+                elements.youtubeResultsGrid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: red;">❌ تعذر تحميل نتائج يوتيوب. تأكد من اتصالك بالإنترنت ومن صحة مفتاح الـ API.</div>`;
+            } else {
+                 alert('تعذر تحميل المزيد من النتائج.');
+            }
             elements.loadingSpinner.style.display = 'none';
-            state.counts.youtube = 0;
+            if (isNewSearch) {
+               state.counts.youtube = 0;
+            }
             updateUI();
         }
     }
 
-    function displayYoutubeResults(items, type) {
-        elements.youtubeResultsGrid.innerHTML = '';
-        state.counts.youtube = items.length;
+    function displayYoutubeResults(items, type, isNewSearch) {
+        
+        // إذا كان بحثاً جديداً، نبدأ من الصفر
+        if (isNewSearch) {
+            elements.youtubeResultsGrid.innerHTML = '';
+            state.counts.youtube = 0;
+        }
+        
+        // إزالة زر "تحميل المزيد" القديم إن وجد
+        const oldLoadMore = document.getElementById('loadMoreContainer');
+        if (oldLoadMore) oldLoadMore.remove();
 
-        if (items.length === 0) {
+
+        state.counts.youtube += items.length;
+
+        if (items.length === 0 && isNewSearch) {
             elements.youtubeResultsGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--gray);">لا توجد نتائج مطابقة للبحث.</div>';
         }
 
@@ -907,10 +986,12 @@
             } else if (type === 'playlist') {
                 id = item.id.playlistId;
                 title = item.snippet.title;
+                // رابط قائمة التشغيل يفتح في نافذة جديدة
                 clickHandler = () => window.open(`https://www.youtube.com/playlist?list=${id}`, '_blank');
             } else if (type === 'channel') {
                 id = item.id.channelId;
                 title = item.snippet.channelTitle;
+                // رابط القناة يفتح في نافذة جديدة
                 clickHandler = () => window.open(`https://www.youtube.com/channel/${id}`, '_blank');
             }
             
@@ -952,10 +1033,30 @@
             card.appendChild(info);
             elements.youtubeResultsGrid.appendChild(card);
         });
+        
+        // إضافة زر "تحميل المزيد" إذا كان هناك مفتاح للصفحة التالية
+        if (state.youtubeNextPageToken) {
+            const loadMoreContainer = document.createElement('div');
+            loadMoreContainer.className = 'load-more-container';
+            loadMoreContainer.id = 'loadMoreContainer';
+            
+            const loadMoreButton = document.createElement('button');
+            loadMoreButton.className = 'load-more-btn';
+            loadMoreButton.id = 'loadMoreYoutube';
+            loadMoreButton.textContent = 'تحميل المزيد...';
+            loadMoreButton.addEventListener('click', () => {
+                executeYoutubeSearch(false); // false لعدم إعادة تعيين الصفحة
+            });
+            
+            loadMoreContainer.appendChild(loadMoreButton);
+            elements.youtubeResultsGrid.appendChild(loadMoreContainer);
+        }
 
         updateUI();
     }
-
+    
+    // (بقية الدوال لم تتغير)
+    
     function openYoutubePlayer(videoId, title) {
         const youtubeIframe = document.getElementById('youtubeIframe');
         youtubeIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
@@ -969,8 +1070,6 @@
         document.getElementById('youtubePlayerOverlay').style.display = 'none';
         document.body.style.overflow = '';
     }
-    
-    // --- وظائف الملفات المحلية ---
 
     function showAlertMessage() {
       elements.alertMessage.style.display = 'block';
