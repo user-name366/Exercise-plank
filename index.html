@@ -1,21 +1,19 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مستكشف الوسائط</title>
+  <title>Media Explorer</title>
   <style>
-    /* ... (جميع أنماط CSS السابقة - لم تتغير) ... */
     :root {
-      --primary: #6A5ACD;          /* أرجواني ملكي */
-      --primary-dark: #4B0082;     /* نيلي غامق */
-      --secondary: #20B2AA;        /* أخضر بحري */
-      --accent: #FF6B6B;           /* وردي مرجاني */
-      --light: #F8F9FF;            /* أزرق فاتح جداً */
-      --dark: #2D3047;             /* أزرق غامق */
-      --gray: #8A8D93;             /* رمادي */
-      --light-gray: #E6E9F0;       /* رمادي فاتح */
-      --card-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+      --primary: #4361ee;
+      --primary-dark: #3a0ca3;
+      --secondary: #f72585;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --light-gray: #e9ecef;
+      --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       --transition: all 0.3s ease;
     }
 
@@ -26,8 +24,8 @@
     }
 
     body {
-      font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
-      background: linear-gradient(135deg, #F5F7FA 0%, #E6E9F0 100%);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: var(--light);
       color: var(--dark);
       line-height: 1.6;
     }
@@ -42,7 +40,7 @@
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: white;
       padding: 1rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       position: sticky;
       top: 0;
       z-index: 100;
@@ -63,7 +61,7 @@
       align-items: center;
       gap: 0.5rem;
       font-size: 1.5rem;
-      font-weight: 700;
+      font-weight: 600;
     }
 
     .folder-input-container {
@@ -71,22 +69,20 @@
     }
 
     .folder-input-label {
-      background-color: rgba(255, 255, 255, 0.15);
-      color: white;
-      padding: 0.7rem 1.2rem;
-      border-radius: 30px;
+      background-color: rgba(255, 255, 255, 0.9);
+      color: var(--primary-dark);
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 0.5rem;
       font-weight: 500;
       transition: var(--transition);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(10px);
     }
 
     .folder-input-label:hover {
-      background-color: rgba(255, 255, 255, 0.25);
+      background-color: white;
       transform: translateY(-2px);
     }
 
@@ -106,8 +102,7 @@
       position: sticky;
       top: 68px;
       z-index: 90;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-      border-bottom: 1px solid var(--light-gray);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     }
 
     .tabs {
@@ -141,130 +136,65 @@
 
     .tab:hover {
       color: var(--primary-dark);
-      background-color: var(--light);
+      background-color: var(--light-gray);
     }
 
     .tab-badge {
       position: absolute;
-      top: 6px;
-      left: 6px;
-      background-color: var(--accent);
+      top: 4px;
+      right: 4px;
+      background-color: var(--secondary);
       color: white;
       border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      font-size: 11px;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
     }
 
     .content-container {
       flex: 1;
-      padding: 2rem;
+      padding: 1.5rem;
       max-width: 1200px;
       margin: 0 auto;
       width: 100%;
     }
 
-    .search-container {
-      margin: 1.5rem 0;
-      position: relative;
-    }
-
-    #searchInput {
-      width: 100%;
-      padding: 1rem 1.2rem;
-      border: 1px solid var(--light-gray);
-      border-radius: 12px;
-      font-size: 1rem;
-      background-color: white;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-      transition: var(--transition);
-    }
-
-    #searchInput:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 4px 12px rgba(106, 90, 205, 0.15);
-    }
-
     .media-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.8rem;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
     }
 
     @media (max-width: 768px) {
       .media-grid {
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 1.2rem;
-      }
-      
-      .content-container {
-        padding: 1.2rem;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       }
     }
 
     .media-card {
       background-color: white;
-      border-radius: 16px;
+      border-radius: 10px;
       overflow: hidden;
       box-shadow: var(--card-shadow);
       transition: var(--transition);
       display: flex;
       flex-direction: column;
-      position: relative;
+      cursor: pointer;
     }
 
     .media-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     }
-
-    /* New styles for the post header */
-    .media-header {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      padding: 1.2rem 1.2rem 0;
-    }
-
-    .publisher-avatar {
-      width: 40px;
-      height: 40px;
-      background-color: var(--secondary);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: white;
-    }
-
-    .publisher-info {
-      flex-grow: 1;
-    }
-
-    .publisher-name {
-      font-weight: 600;
-      color: var(--dark);
-    }
-
-    .post-date {
-      font-size: 0.8rem;
-      color: var(--gray);
-    }
-
-    /* End of new styles */
 
     .media-thumbnail {
       position: relative;
       width: 100%;
-      padding-top: 60%;
-      background: linear-gradient(135deg, var(--light), var(--light-gray));
+      padding-top: 56.25%;
+      background-color: var(--light-gray);
       overflow: hidden;
     }
 
@@ -275,7 +205,6 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.5s ease;
     }
 
     .media-thumbnail video {
@@ -287,57 +216,6 @@
       object-fit: cover;
     }
 
-    .media-card:hover .media-thumbnail img {
-      transform: scale(1.05);
-    }
-
-    /* Style for the Play Icon in the video card */
-    .play-icon-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 5;
-      pointer-events: none; /* مهم للسماح بالضغط على البطاقة */
-    }
-
-    .play-icon-overlay .play-btn {
-      width: 60px;
-      height: 60px;
-      background-color: rgba(0, 0, 0, 0.6);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 2rem;
-      border: 3px solid white;
-      transition: transform 0.2s ease;
-    }
-    
-    .media-card:hover .play-icon-overlay .play-btn {
-      transform: scale(1.1);
-    }
-    /* End of Play Icon Style */
-
-
-    .file-type-badge {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      background-color: rgba(255, 255, 255, 0.9);
-      color: var(--primary-dark);
-      padding: 0.3rem 0.6rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
     .audio-thumbnail {
       position: absolute;
       top: 0;
@@ -347,9 +225,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #6A5ACD, #4B0082);
+      background: linear-gradient(135deg, #7209b7, #4361ee);
       color: white;
-      font-size: 2.5rem;
     }
 
     .doc-thumbnail {
@@ -361,22 +238,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #20B2AA, #2D8E87);
+      background: linear-gradient(135deg, #4cc9f0, #4895ef);
       color: white;
-      font-size: 2.5rem;
     }
 
     .media-info {
-      padding: 1.2rem;
+      padding: 1rem;
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
     }
 
     .media-title {
-      font-weight: 600;
-      margin-bottom: 0.3rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -391,10 +264,6 @@
 
     .media-type {
       text-transform: capitalize;
-      background-color: var(--light);
-      padding: 0.2rem 0.6rem;
-      border-radius: 12px;
-      font-weight: 500;
     }
 
     .media-player {
@@ -403,14 +272,12 @@
       left: 0;
       right: 0;
       background-color: white;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
       z-index: 200;
       transform: translateY(100%);
       transition: var(--transition);
       max-width: 1200px;
       margin: 0 auto;
-      border-radius: 16px 16px 0 0;
-      overflow: hidden;
     }
 
     .media-player.active {
@@ -421,8 +288,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      padding: 0.5rem 1rem;
+      background-color: var(--primary);
       color: white;
     }
 
@@ -430,59 +297,44 @@
       background: none;
       border: none;
       color: white;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       cursor: pointer;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: var(--transition);
-    }
-
-    .player-close:hover {
-      background-color: rgba(255, 255, 255, 0.2);
     }
 
     .player-content {
-      padding: 1.5rem;
-      max-height: 70vh;
-      overflow: auto;
+      padding: 1rem;
     }
 
     .player-content video, .player-content audio {
       width: 100%;
-      border-radius: 8px;
+      border-radius: 5px;
     }
 
     .player-content img {
       max-width: 100%;
-      max-height: 65vh;
+      max-height: 70vh;
       display: block;
       margin: 0 auto;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
     }
 
     .doc-viewer {
       width: 100%;
-      height: 65vh;
+      height: 70vh;
       border: none;
-      background-color: var(--light);
-      border-radius: 8px;
+      background-color: var(--light-gray);
     }
 
     .loading-spinner {
       display: flex;
       justify-content: center;
-      padding: 3rem;
+      padding: 2rem;
     }
 
     .spinner {
-      width: 44px;
-      height: 44px;
-      border: 4px solid rgba(106, 90, 205, 0.1);
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(0, 0, 0, 0.1);
       border-radius: 50%;
       border-top-color: var(--primary);
       animation: spin 1s ease-in-out infinite;
@@ -494,99 +346,60 @@
 
     .empty-state {
       text-align: center;
-      padding: 4rem 2rem;
+      padding: 3rem;
       color: var(--gray);
-      background-color: white;
-      border-radius: 16px;
-      box-shadow: var(--card-shadow);
-      margin: 2rem 0;
     }
 
     .empty-icon {
-      font-size: 4rem;
-      margin-bottom: 1.5rem;
-      opacity: 0.5;
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--light-gray);
     }
 
     .empty-title {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      color: var(--dark);
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
     }
 
     .empty-description {
-      margin-bottom: 2rem;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
+      margin-bottom: 1rem;
     }
 
     .floating-action-btn {
       position: fixed;
-      bottom: 2rem;
-      left: 2rem;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background-color: var(--secondary);
       color: white;
-      width: 56px;
-      height: 56px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 6px 15px rgba(106, 90, 205, 0.3);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
       cursor: pointer;
       z-index: 100;
       transition: var(--transition);
-      font-size: 1.2rem;
-      font-weight: bold;
     }
 
     .floating-action-btn:hover {
-      transform: translateY(-5px) scale(1.05);
-      box-shadow: 0 10px 25px rgba(106, 90, 205, 0.4);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
     }
 
     .alert-message {
-      background: linear-gradient(to right, #FFF3E0, #FFE0B2);
-      color: #E65100;
-      padding: 1.2rem;
-      border-radius: 12px;
-      margin: 1.5rem auto;
+      background-color: #fff3cd;
+      color: #856404;
+      padding: 1rem;
+      border-radius: 4px;
+      margin: 1rem auto;
       max-width: 800px;
       text-align: center;
-      border-right: 5px solid #FF9800;
-      box-shadow: 0 2px 8px rgba(230, 81, 0, 0.1);
+      border-left: 4px solid #ffeeba;
     }
 
-    /* Video Overlay Styles */
-    #videoOverlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 1000;
-    }
-
-    .video-overlay-content {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem;
-    }
-
-    #overlayVideo {
-      width: 90%;
-      max-height: 85vh;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-
+    /* Styles for video overlay controls */
     .video-controls {
       position: absolute;
       width: 100%;
@@ -596,6 +409,10 @@
       pointer-events: none;
       opacity: 1;
       transition: opacity 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
     }
 
     .video-controls.hidden {
@@ -604,118 +421,159 @@
 
     .video-controls button {
       pointer-events: auto;
-      border: none;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
+      margin: 0 5px;
+    }
+
+    /* YouTube specific styles */
+    #youtube-content {
+      display: none;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .youtube-search-bar {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .youtube-search-controls {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .youtube-search-controls input {
+      flex: 1;
+      padding: 0.8rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+
+    .youtube-search-controls button {
+      padding: 0.8rem 1.5rem;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
       cursor: pointer;
       transition: var(--transition);
-      background-color: rgba(106, 90, 205, 0.8);
-      color: white;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
 
-    .video-controls button:hover {
-      background-color: rgba(106, 90, 205, 1);
-      transform: scale(1.1);
+    .youtube-search-controls button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    /* YouTube Filters */
+    .youtube-filters {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
     }
 
-    .close-overlay-btn {
+    .youtube-filters button {
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--primary);
+        background-color: white;
+        color: var(--primary);
+        border-radius: 5px;
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: 500;
+    }
+
+    .youtube-filters button.active {
+        background-color: var(--primary);
+        color: white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .youtube-filters button:hover:not(.active) {
+        background-color: var(--light-gray);
+    }
+
+    .youtube-results {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .youtube-card {
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .youtube-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .youtube-thumbnail {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background-color: var(--light-gray);
+      overflow: hidden;
+    }
+    
+    .youtube-card[data-type="channel"] .youtube-thumbnail {
+        padding-top: 0;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f0f0f0;
+    }
+
+    .youtube-card[data-type="channel"] .youtube-thumbnail img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid white;
+    }
+
+    .youtube-thumbnail img {
       position: absolute;
-      top: 20px;
-      right: 20px;
-      background-color: rgba(255, 107, 107, 0.9) !important;
-    }
-
-    .prev-video-btn {
-      position: absolute;
-      left: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
-    .next-video-btn {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
-    .bottom-controls-group { /* New container for bottom buttons */
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 30px;
-      display: flex;
-      gap: 15px; /* Spacing between buttons */
-    }
-
-    .autoplay-toggle-btn, .shuffle-toggle-btn {
-      border-radius: 25px !important;
-      width: auto !important;
-      height: auto !important;
-      padding: 0.7rem 1.5rem;
-      font-size: 1rem !important;
-      background-color: rgba(32, 178, 170, 0.8) !important; /* Secondary color for clarity */
-    }
-
-    .autoplay-toggle-btn:hover, .shuffle-toggle-btn:hover {
-      background-color: rgba(32, 178, 170, 1) !important;
-    }
-
-
-    /* Image Overlay Styles */
-    #imageOverlay {
-      display: none;
-      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 1000;
-      cursor: pointer;
+      object-fit: cover;
     }
 
-    .image-overlay-content {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem;
+    .youtube-info {
+      padding: 1rem;
     }
 
-    #overlayImage {
-      max-width: 95%;
-      max-height: 95vh;
-      border-radius: 8px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      object-fit: contain;
+    .youtube-title {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-height: 1.4;
+    }
+    
+    .youtube-type-tag {
+        font-size: 0.75rem;
+        background-color: var(--secondary);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 3px;
+        margin-right: 5px;
+        text-transform: capitalize;
     }
 
-    .close-image-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background-color: rgba(255, 107, 107, 0.9);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      font-size: 1.5rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: var(--transition);
-      z-index: 1001;
+    .youtube-channel {
+      color: var(--gray);
+      font-size: 0.85rem;
     }
   </style>
 </head>
@@ -725,12 +583,12 @@
       <div class="header-content">
         <div class="logo">
           <span>📁</span>
-          <span>مستكشف الوسائط</span>
+          <span>Media Explorer</span>
         </div>
         <div class="folder-input-container">
           <label for="folderInput" class="folder-input-label">
             <span>📂</span>
-            <span>اختر مجلد</span>
+            <span>Choose Folder</span>
           </label>
           <input type="file" id="folderInput" webkitdirectory directory multiple>
         </div>
@@ -740,55 +598,76 @@
     <div class="tabs-container">
       <div class="tabs" id="tabs">
         <div class="tab active" data-type="all">
-          <span>🏠 الرئيسية</span>
+          <span>🏠 Home</span>
           <span class="tab-badge" id="all-badge"></span>
         </div>
         <div class="tab" data-type="image">
-          <span>🖼️ الصور</span>
+          <span>🖼️ Images</span>
           <span class="tab-badge" id="image-badge"></span>
         </div>
         <div class="tab" data-type="video">
-          <span>🎥 الفيديوهات</span>
+          <span>🎥 Videos</span>
           <span class="tab-badge" id="video-badge"></span>
         </div>
         <div class="tab" data-type="audio">
-          <span>🎧 الصوتيات</span>
+          <span>🎧 Audio</span>
           <span class="tab-badge" id="audio-badge"></span>
         </div>
         <div class="tab" data-type="doc">
-          <span>📄 المستندات</span>
+          <span>📄 Documents</span>
           <span class="tab-badge" id="doc-badge"></span>
+        </div>
+        <div class="tab" data-type="youtube">
+          <span>▶️ YouTube</span>
+          <span class="tab-badge" id="youtube-badge"></span>
         </div>
       </div>
     </div>
-    
+    <div style="margin: 1rem 0;" id="localSearchContainer">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="🔍 ابحث عن ملف بالاسم أو الامتداد..."
+        style="width: 100%; padding: 0.8rem 1rem; border: 1px solid #ccc; border-radius: 10px; font-size: 1rem;"
+      />
+    </div>
+
     <div class="content-container">
-      <div class="search-container">
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="🔍 ابحث عن ملف بالاسم أو النوع..."
-        />
-      </div>
-      
       <div class="alert-message" id="alertMessage">
-        ⚠️ من فضلك اختر مجلدًا لبدء استعراض الملفات
+        ⚠️ من فضلك اختر المجلد من جديد لعرض الملفات
       </div>
       
-      <div class="media-grid" id="mediaGrid"></div>
-      
-      <div class="loading-spinner" id="loadingSpinner" style="display: none;">
-        <div class="spinner"></div>
+      <div id="youtube-content" style="display: none;">
+          <div class="youtube-search-bar">
+              <div class="youtube-filters" id="youtubeFilters">
+                  <button data-type="video" class="active">📺 فيديوهات</button>
+                  <button data-type="playlist">📑 قوائم تشغيل</button>
+                  <button data-type="channel">👤 قنوات</button>
+              </div>
+              
+              <div class="youtube-search-controls">
+                  <input type="text" id="youtubeSearchInput" placeholder="🔍 ابحث في يوتيوب..." />
+                  <button id="youtubeSearchButton">بحث</button>
+              </div>
+          </div>
+          <div class="youtube-results" id="youtubeResultsGrid">
+              </div>
       </div>
       
-      <div class="empty-state" id="emptyState" style="display: none;">
-        <div class="empty-icon">📁</div>
-        <h3 class="empty-title">لا توجد ملفات وسائط</h3>
-        <p class="empty-description">اختر مجلدًا يحتوي على ملفات الوسائط الخاصة بك أو جرب البحث باستخدام كلمات أخرى</p>
-        <label for="folderInput" class="folder-input-label">
-          <span>📂</span>
-          <span>اختر مجلد</span>
-        </label>
+      <div id="local-content">
+          <div class="media-grid" id="mediaGrid"></div>
+          <div class="loading-spinner" id="loadingSpinner" style="display: none;">
+            <div class="spinner"></div>
+          </div>
+          <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-icon">📁</div>
+            <h3 class="empty-title">No Media Files Found</h3>
+            <p class="empty-description">Please select a folder containing media files</p>
+            <label for="folderInput" class="folder-input-label">
+              <span>📂</span>
+              <span>Choose Folder</span>
+            </label>
+          </div>
       </div>
     </div>
 
@@ -800,33 +679,34 @@
       <div class="player-content" id="playerContent"></div>
     </div>
 
-    <div class="floating-action-btn" id="scrollToTop" title="الانتقال للأعلى" style="display: none;">
+    <div class="floating-action-btn" id="scrollToTop" title="Scroll to top" style="display: none;">
       ↑
     </div>
   </div>
 
-  <div id="videoOverlay">
-    <div class="video-overlay-content">
-      <video id="overlayVideo" controls autoplay></video>
-      
+  <div id="videoOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:1000;">
+    <div style="position:relative;width:100%;height:100%;display:flex;justify-content:center;align-items:center;">
+      <video id="overlayVideo" style="width:90%;height:90%;max-height:90vh;border-radius: 10px;" controls autoplay></video>
+
       <div class="video-controls" id="videoControls">
-        <button class="close-overlay-btn" onclick="closeVideoOverlay()">✕</button>
-        <button class="prev-video-btn" onclick="playPrevVideo()">⏮</button>
-        <button class="next-video-btn" onclick="playNextVideo()">⏭</button>
+        <button onclick="closeVideoOverlay()" style="position:absolute;top:20px;right:20px;background:#ff0000aa;color:white;border:none;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:20px;">✕</button>
+
+        <button onclick="playPrevVideo()" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);background:#4361eeaa;color:white;border:none;width:50px;height:50px;border-radius:50%;cursor:pointer;font-size:24px;">⏮</button>
+
+        <button onclick="playNextVideo()" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);background:#4361eeaa;color:white;border:none;width:50px;height:50px;border-radius:50%;cursor:pointer;font-size:24px;">⏭</button>
+
+        <button onclick="toggleShuffle(event)" style="position:absolute;right:20px;bottom:20px;background:#4361eeaa;color:white;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;font-size:14px;">تشغيل عشوائي: OFF</button>
         
-        <div class="bottom-controls-group">
-          <button class="autoplay-toggle-btn" onclick="toggleAutoPlay(event)">التشغيل التلقائي: غير مفعل</button>
-          <button class="shuffle-toggle-btn" onclick="toggleShuffle(event)">الترتيب العشوائي: غير مفعل</button>
-        </div>
+        <button onclick="toggleAutoPlay(event)" style="position:absolute;left:20px;bottom:20px;background:#4361eeaa;color:white;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;font-size:14px;">تشغيل تلقائي: OFF</button>
       </div>
     </div>
   </div>
-
-  <div id="imageOverlay">
-    <div class="image-overlay-content">
-      <img id="overlayImage" src="" alt="Full size image">
-      <button class="close-image-btn" onclick="closeImageOverlay()">✕</button>
-    </div>
+  
+  <div id="youtubePlayerOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:1001;">
+      <div style="position:relative;width:100%;height:100%;display:flex;justify-content:center;align-items:center;">
+          <button onclick="closeYoutubePlayer()" style="position:absolute;top:20px;right:20px;background:#ff0000aa;color:white;border:none;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:20px;">✕</button>
+          <iframe id="youtubeIframe" width="90%" height="90%" style="border-radius: 10px;" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
   </div>
 
   <script>
@@ -837,24 +717,21 @@
       loadedFiles: new Set(),
       currentlyPlaying: null,
       isLoading: false,
+      youtubeSearchType: 'video',
       counts: {
         all: 0,
         image: 0,
         video: 0,
         audio: 0,
-        doc: 0
-      },
-      // === التعديل هنا: إضافة خاصية تتبع التشغيل العشوائي ===
-      shuffleEnabled: true, // تفعيل الترتيب العشوائي افتراضياً كما طلبت
-      // ======================================================
-      videoPlayList: [] // قائمة التشغيل العشوائية/المرتبة الحالية
+        doc: 0,
+        youtube: 0
+      }
     };
 
     // DOM Elements
     const elements = {
       folderInput: document.getElementById('folderInput'),
       tabs: document.getElementById('tabs'),
-      searchInput: document.getElementById('searchInput'),
       mediaGrid: document.getElementById('mediaGrid'),
       loadingSpinner: document.getElementById('loadingSpinner'),
       emptyState: document.getElementById('emptyState'),
@@ -863,90 +740,248 @@
       playerContent: document.getElementById('playerContent'),
       playerClose: document.getElementById('playerClose'),
       scrollToTop: document.getElementById('scrollToTop'),
+      localContent: document.getElementById('local-content'),
+      localSearchContainer: document.getElementById('localSearchContainer'),
+      youtubeContent: document.getElementById('youtube-content'),
+      youtubeSearchInput: document.getElementById('youtubeSearchInput'),
+      youtubeSearchButton: document.getElementById('youtubeSearchButton'),
+      youtubeResultsGrid: document.getElementById('youtubeResultsGrid'),
+      youtubeFilters: document.getElementById('youtubeFilters'),
       tabBadges: {
         all: document.getElementById('all-badge'),
         image: document.getElementById('image-badge'),
         video: document.getElementById('video-badge'),
         audio: document.getElementById('audio-badge'),
-        doc: document.getElementById('doc-badge')
+        doc: document.getElementById('doc-badge'),
+        youtube: document.getElementById('youtube-badge')
       },
       alertMessage: document.getElementById('alertMessage')
     };
 
     // Constants
     const BATCH_SIZE = 12;
-    const SUPPORTED_FORMATS = {
-      image: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'],
-      video: ['mp4', 'webm', 'mov', 'avi', 'mkv', 'flv'],
-      audio: ['mp3', 'wav', 'ogg', 'm4a', 'flac'],
-      doc: ['pdf', 'doc', 'docx', 'txt', 'rtf', 'xls', 'xlsx', 'ppt', 'pptx']
-    };
+    // تذكير: المفتاح مرئي هنا. لأغراض التعليم هذا جيد، لكن يُفضل استخدام خادم خلفي للإنتاج.
+    const YOUTUBE_API_KEY = 'AIzaSyBI5_bMERLQgiMHNcQCOHreTT6Kzzu_D2I'; 
+    const MAX_YOUTUBE_RESULTS = 50; 
 
-    // Utility function to shuffle an array
-    function shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    }
+    const SUPPORTED_FORMATS = {
+      image: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+      video: ['mp4', 'webm', 'mov', 'avi'],
+      audio: ['mp3', 'wav', 'ogg', 'm4a'],
+      doc: ['pdf', 'doc', 'docx', 'txt', 'rtf']
+    };
 
     // Initialize the app
     function init() {
       setupEventListeners();
       updateUI();
       showAlertMessage();
-      updateShuffleButton(); // تحديث زر التشغيل العشوائي عند التهيئة
     }
 
     // Event Listeners
     function setupEventListeners() {
-      // Folder selection
       elements.folderInput.addEventListener('change', handleFolderSelection);
 
-      // Tab switching
       Array.from(elements.tabs.children).forEach(tab => {
         tab.addEventListener('click', () => {
           state.currentTab = tab.dataset.type;
           state.loadedFiles.clear();
           updateUI();
-          renderMediaGrid();
+          renderContent();
         });
       });
 
-      // Search functionality
-      elements.searchInput.addEventListener('input', handleSearch);
+      document.getElementById('searchInput').addEventListener('input', filterLocalMediaGrid);
 
-      // Infinite scroll
+      elements.youtubeSearchButton.addEventListener('click', executeYoutubeSearch);
+      elements.youtubeSearchInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+              executeYoutubeSearch();
+          }
+      });
+      
+      Array.from(elements.youtubeFilters.children).forEach(button => {
+          button.addEventListener('click', (e) => {
+              const newType = e.target.dataset.type;
+              if (newType === state.youtubeSearchType) return;
+              
+              state.youtubeSearchType = newType;
+              updateYoutubeFiltersUI(newType);
+              
+              const query = elements.youtubeSearchInput.value.trim();
+              if (query) {
+                  executeYoutubeSearch();
+              }
+          });
+      });
+
       window.addEventListener('scroll', handleScroll);
-
-      // Media player close
       elements.playerClose.addEventListener('click', closeMediaPlayer);
-
-      // Scroll to top button
       elements.scrollToTop.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
-
-      // Show/hide scroll to top button
       window.addEventListener('scroll', () => {
         elements.scrollToTop.style.display = window.scrollY > 300 ? 'flex' : 'none';
       });
     }
 
-    // Show alert message
+    // --- وظائف يوتيوب ---
+
+    function updateYoutubeFiltersUI(activeType) {
+        Array.from(elements.youtubeFilters.children).forEach(button => {
+            button.classList.toggle('active', button.dataset.type === activeType);
+        });
+    }
+
+    function executeYoutubeSearch() {
+        const query = elements.youtubeSearchInput.value.trim();
+        if (query) {
+            searchYoutube(query, state.youtubeSearchType); 
+        } else {
+             elements.youtubeResultsGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--gray);">الرجاء إدخال كلمة بحث.</div>';
+             state.counts.youtube = 0;
+             updateUI();
+        }
+    }
+
+    function renderContent() {
+      const isLocalTab = state.currentTab !== 'youtube';
+      
+      elements.localContent.style.display = isLocalTab ? 'block' : 'none';
+      elements.localSearchContainer.style.display = isLocalTab ? 'block' : 'none';
+      elements.youtubeContent.style.display = isLocalTab ? 'none' : 'flex';
+      
+      if (isLocalTab) {
+          renderMediaGrid();
+      } else {
+          updateYoutubeFiltersUI(state.youtubeSearchType);
+          elements.youtubeResultsGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--gray);">ابدأ البحث في يوتيوب...</div>';
+          state.counts.youtube = 0;
+          updateUI();
+      }
+    }
+
+    async function searchYoutube(query, type) {
+        elements.youtubeResultsGrid.innerHTML = elements.loadingSpinner.outerHTML;
+        elements.loadingSpinner.style.display = 'flex';
+        
+        // بناء رابط الـ URL مع maxResults=50 ونوع البحث المحدد
+        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=${type}&key=${YOUTUBE_API_KEY}&maxResults=${MAX_YOUTUBE_RESULTS}`;
+        
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            displayYoutubeResults(data.items, type);
+            elements.loadingSpinner.style.display = 'none';
+        } catch (error) {
+            console.error('Error fetching YouTube data:', error);
+            elements.youtubeResultsGrid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: red;">❌ تعذر تحميل نتائج يوتيوب. تأكد من اتصالك بالإنترنت ومن صحة مفتاح الـ API.</div>`;
+            elements.loadingSpinner.style.display = 'none';
+            state.counts.youtube = 0;
+            updateUI();
+        }
+    }
+
+    function displayYoutubeResults(items, type) {
+        elements.youtubeResultsGrid.innerHTML = '';
+        state.counts.youtube = items.length;
+
+        if (items.length === 0) {
+            elements.youtubeResultsGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--gray);">لا توجد نتائج مطابقة للبحث.</div>';
+        }
+
+        items.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'youtube-card';
+            card.dataset.type = type;
+            
+            let id, title, clickHandler;
+
+            if (type === 'video') {
+                id = item.id.videoId;
+                title = item.snippet.title;
+                clickHandler = () => openYoutubePlayer(id, title);
+            } else if (type === 'playlist') {
+                id = item.id.playlistId;
+                title = item.snippet.title;
+                clickHandler = () => window.open(`https://www.youtube.com/playlist?list=${id}`, '_blank');
+            } else if (type === 'channel') {
+                id = item.id.channelId;
+                title = item.snippet.channelTitle;
+                clickHandler = () => window.open(`https://www.youtube.com/channel/${id}`, '_blank');
+            }
+            
+            card.addEventListener('click', clickHandler);
+
+
+            const thumbnail = document.createElement('div');
+            thumbnail.className = 'youtube-thumbnail';
+            const img = document.createElement('img');
+            
+            if (type === 'channel') {
+                img.src = item.snippet.thumbnails.default.url;
+            } else {
+                img.src = item.snippet.thumbnails.medium.url;
+            }
+            
+            img.alt = title;
+            thumbnail.appendChild(img);
+
+            const info = document.createElement('div');
+            info.className = 'youtube-info';
+            
+            const titleElement = document.createElement('div');
+            titleElement.className = 'youtube-title';
+            
+            const typeTag = document.createElement('span');
+            typeTag.className = 'youtube-type-tag';
+            typeTag.textContent = type;
+            titleElement.appendChild(typeTag);
+            titleElement.appendChild(document.createTextNode(title));
+            
+            const channel = document.createElement('div');
+            channel.className = 'youtube-channel';
+            channel.textContent = (type === 'channel') ? item.snippet.description : item.snippet.channelTitle;
+
+            info.appendChild(titleElement);
+            info.appendChild(channel);
+            card.appendChild(thumbnail);
+            card.appendChild(info);
+            elements.youtubeResultsGrid.appendChild(card);
+        });
+
+        updateUI();
+    }
+
+    function openYoutubePlayer(videoId, title) {
+        const youtubeIframe = document.getElementById('youtubeIframe');
+        youtubeIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        document.getElementById('youtubePlayerOverlay').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeYoutubePlayer() {
+        const youtubeIframe = document.getElementById('youtubeIframe');
+        youtubeIframe.src = ''; 
+        document.getElementById('youtubePlayerOverlay').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+    
+    // --- وظائف الملفات المحلية ---
+
     function showAlertMessage() {
       elements.alertMessage.style.display = 'block';
       elements.emptyState.style.display = 'none';
       elements.mediaGrid.innerHTML = '';
     }
 
-    // Hide alert message
     function hideAlertMessage() {
       elements.alertMessage.style.display = 'none';
     }
 
-    // Handle folder selection
     function handleFolderSelection(event) {
       const newFiles = Array.from(event.target.files)
         .filter(file => isSupportedFile(file.name))
@@ -959,31 +994,21 @@
           lastModified: file.lastModified
         }));
 
-      // Add new files to the beginning of the array
       state.files = [...newFiles, ...state.files];
       updateFileCounts();
       
-      // Reset loaded files for current tab
       state.loadedFiles.clear();
       
       hideAlertMessage();
       updateUI();
-      renderMediaGrid();
+      renderContent();
     }
 
-    // Handle search
-    function handleSearch() {
-      const query = elements.searchInput.value.toLowerCase();
-      renderMediaGrid(query);
-    }
-
-    // Check if file is supported
     function isSupportedFile(filename) {
       const ext = filename.split('.').pop().toLowerCase();
       return Object.values(SUPPORTED_FORMATS).some(formats => formats.includes(ext));
     }
 
-    // Get file type
     function getFileType(filename) {
       const ext = filename.split('.').pop().toLowerCase();
       
@@ -996,19 +1021,18 @@
       return 'other';
     }
 
-    // Generate unique ID for file
     function generateFileId(file) {
       return `${file.name}-${file.size}-${file.lastModified}`;
     }
 
-    // Update file type counts
     function updateFileCounts() {
       const counts = {
         all: state.files.length,
         image: 0,
         video: 0,
         audio: 0,
-        doc: 0
+        doc: 0,
+        youtube: state.counts.youtube
       };
 
       state.files.forEach(file => {
@@ -1021,66 +1045,64 @@
       state.counts = counts;
     }
 
-    // Filter files based on current tab and search query
-    function getFilteredFiles(query = '') {
-      let filteredFiles = state.files;
-      
-      if (state.currentTab !== 'all') {
-        filteredFiles = state.files.filter(file => file.type === state.currentTab);
-      }
-      
-      if (query) {
-        filteredFiles = filteredFiles.filter(file => 
-          file.name.toLowerCase().includes(query) ||
-          file.type.toLowerCase().includes(query) ||
-          file.name.split('.').pop().toLowerCase().includes(query)
-        );
-      }
-      
+    function getFilteredFiles() {
       if (state.currentTab === 'all') {
-        // Shuffle for home tab but keep search results relevant
-        return query ? filteredFiles : [...filteredFiles].sort(() => Math.random() - 0.5);
+        return state.files; 
       }
-      
-      return filteredFiles;
+      return state.files.filter(file => file.type === state.currentTab);
     }
 
-    // Render media grid
-    function renderMediaGrid(query = '') {
-      const filteredFiles = getFilteredFiles(query);
+    function renderMediaGrid() {
+      elements.mediaGrid.innerHTML = ''; 
+      const filteredFiles = getFilteredFiles();
       
       if (filteredFiles.length === 0) {
         elements.emptyState.style.display = 'block';
-        elements.mediaGrid.innerHTML = '';
         return;
       }
       
       elements.emptyState.style.display = 'none';
-      elements.mediaGrid.innerHTML = '';
-      state.loadedFiles.clear();
-      loadMoreItems(query);
-      
-      // Note: Videos are shuffled on the fly when opening the overlay now
+      loadMoreItems();
+    }
+    
+    function filterLocalMediaGrid(e) {
+        const query = e.target.value.toLowerCase();
+        const filteredFiles = getFilteredFiles();
+        
+        const finalFiltered = filteredFiles.filter(file => {
+          return (
+            file.name.toLowerCase().includes(query) ||
+            file.type.toLowerCase().includes(query) ||
+            file.name.split('.').pop().toLowerCase().includes(query)
+          );
+        });
+        
+        elements.mediaGrid.innerHTML = "";
+        finalFiltered.forEach(file => {
+          createMediaCard(file); 
+        });
+        
+        elements.loadingSpinner.style.display = 'none';
+        elements.emptyState.style.display = finalFiltered.length === 0 ? 'block' : 'none';
     }
 
-    // Load more items (infinite scroll)
-    function loadMoreItems(query = '') {
+    function loadMoreItems() {
       if (state.isLoading) return;
       
-      const filteredFiles = getFilteredFiles(query);
-      const unloadedFiles = filteredFiles.filter(file => !state.loadedFiles.has(file.id));
+      const filteredFiles = getFilteredFiles();
+      const loadedIds = Array.from(elements.mediaGrid.children).map(card => card.dataset.id);
+
+      const unloadedFiles = filteredFiles.filter(file => !loadedIds.includes(file.id));
       
       if (unloadedFiles.length === 0) return;
       
       state.isLoading = true;
       elements.loadingSpinner.style.display = 'flex';
       
-      // Simulate loading delay for better UX
       setTimeout(() => {
         const batch = unloadedFiles.slice(0, BATCH_SIZE);
         
         batch.forEach(file => {
-          state.loadedFiles.add(file.id);
           createMediaCard(file);
         });
         
@@ -1089,49 +1111,14 @@
       }, 300);
     }
 
-    // Create media card
     function createMediaCard(file) {
       const card = document.createElement('div');
       card.className = 'media-card';
       card.dataset.id = file.id;
       
-      // New: Post Header
-      const header = document.createElement('div');
-      header.className = 'media-header';
-      
-      const avatar = document.createElement('div');
-      avatar.className = 'publisher-avatar';
-      avatar.textContent = '👤';
-      
-      const publisherInfo = document.createElement('div');
-      publisherInfo.className = 'publisher-info';
-      
-      const publisherName = document.createElement('div');
-      publisherName.className = 'publisher-name';
-      publisherName.textContent = 'مستخدم محلي'; // Fixed publisher name
-      
-      const postDate = document.createElement('div');
-      postDate.className = 'post-date';
-      postDate.textContent = 'الآن'; // Fixed date
-      
-      publisherInfo.appendChild(publisherName);
-      publisherInfo.appendChild(postDate);
-      header.appendChild(avatar);
-      header.appendChild(publisherInfo);
-      
-      card.appendChild(header);
-
-      // Thumbnail
       const thumbnail = document.createElement('div');
       thumbnail.className = 'media-thumbnail';
       
-      // File type badge
-      const typeBadge = document.createElement('div');
-      typeBadge.className = 'file-type-badge';
-      typeBadge.textContent = file.name.split('.').pop().toUpperCase();
-      thumbnail.appendChild(typeBadge);
-      
-      // File type specific content
       if (file.type === 'image') {
         const img = document.createElement('img');
         img.src = URL.createObjectURL(file.file);
@@ -1146,13 +1133,6 @@
         video.loop = true;
         video.playsInline = true;
         thumbnail.appendChild(video);
-        
-        // === التعديل هنا: إضافة أيقونة التشغيل للفيديو ===
-        const playIcon = document.createElement('div');
-        playIcon.className = 'play-icon-overlay';
-        playIcon.innerHTML = '<div class="play-btn">▶</div>';
-        thumbnail.appendChild(playIcon);
-        // ===============================================
       } 
       else if (file.type === 'audio') {
         const audioThumb = document.createElement('div');
@@ -1167,16 +1147,11 @@
         const ext = file.name.split('.').pop().toLowerCase();
         if (ext === 'pdf') docThumb.innerHTML = '📄';
         else if (ext === 'doc' || ext === 'docx') docThumb.innerHTML = '📝';
-        else if (ext === 'xls' || ext === 'xlsx') docThumb.innerHTML = '📊';
-        else if (ext === 'ppt' || ext === 'pptx') docThumb.innerHTML = '📋';
-        else docThumb.innerHTML = '📁';
+        else docThumb.innerHTML = '📋';
         
         thumbnail.appendChild(docThumb);
       }
       
-      card.appendChild(thumbnail);
-
-      // Info
       const info = document.createElement('div');
       info.className = 'media-info';
       
@@ -1200,46 +1175,45 @@
       info.appendChild(title);
       info.appendChild(meta);
       
+      card.appendChild(thumbnail);
       card.appendChild(info);
       
-      // Click handler
       card.addEventListener('click', () => openMediaPlayer(file));
       
       elements.mediaGrid.appendChild(card);
     }
 
-    // Format file size
     function formatFileSize(bytes) {
-      if (bytes === 0) return '0 بايت';
+      if (bytes === 0) return '0 Bytes';
       const k = 1024;
-      const sizes = ['بايت', 'ك.ب', 'م.ب', 'ج.ب'];
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
       const i = Math.floor(Math.log(bytes) / Math.log(k));
       return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
     }
 
-    // Open media player
     function openMediaPlayer(file) {
-      // Close any currently playing media
       if (state.currentlyPlaying) {
         closeMediaPlayer();
       }
       
       state.currentlyPlaying = file.id;
-      
-      if (file.type === 'image') {
-        openImageOverlay(file);
-        return;
-      } 
-      
-      if (file.type === 'video') {
-        openVideoOverlay(file);
-        return;
-      } 
-
       elements.playerTitle.textContent = file.name;
       elements.playerContent.innerHTML = '';
       
-      if (file.type === 'audio') {
+      if (file.type === 'image') {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file.file);
+        img.alt = file.name;
+        elements.playerContent.appendChild(img);
+      } 
+      else if (file.type === 'video') {
+        const video = document.createElement('video');
+        video.src = URL.createObjectURL(file.file);
+        video.controls = true;
+        video.autoplay = true;
+        elements.playerContent.appendChild(video);
+      } 
+      else if (file.type === 'audio') {
         const audio = document.createElement('audio');
         audio.src = URL.createObjectURL(file.file);
         audio.controls = true;
@@ -1257,200 +1231,250 @@
       document.body.style.overflow = 'hidden';
     }
 
-    // Close media player
     function closeMediaPlayer() {
       elements.mediaPlayer.classList.remove('active');
       document.body.style.overflow = '';
       state.currentlyPlaying = null;
       
-      // Clean up
       setTimeout(() => {
         elements.playerContent.innerHTML = '';
       }, 300);
     }
 
-    // Handle scroll for infinite loading
     function handleScroll() {
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
-        loadMoreItems(elements.searchInput.value);
-      }
+        if (state.currentTab !== 'youtube') {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+                loadMoreItems();
+            }
+        }
     }
 
-    // Update UI based on state
     function updateUI() {
-      // Update active tab
       Array.from(elements.tabs.children).forEach(tab => {
         tab.classList.toggle('active', tab.dataset.type === state.currentTab);
       });
       
-      // Update tab badges
       elements.tabBadges.all.textContent = state.counts.all > 0 ? state.counts.all : '';
       elements.tabBadges.image.textContent = state.counts.image > 0 ? state.counts.image : '';
       elements.tabBadges.video.textContent = state.counts.video > 0 ? state.counts.video : '';
       elements.tabBadges.audio.textContent = state.counts.audio > 0 ? state.counts.audio : '';
       elements.tabBadges.doc.textContent = state.counts.doc > 0 ? state.counts.doc : '';
+      elements.tabBadges.youtube.textContent = state.counts.youtube > 0 ? state.counts.youtube : '';
     }
+    
+    // --- وظائف مشغل الفيديو (Video Overlay) مع التشغيل العشوائي ---
 
-    // Video Overlay Functions
-    const videoOverlay = document.getElementById('videoOverlay');
+    const overlay = document.getElementById('videoOverlay');
     const overlayVideo = document.getElementById('overlayVideo');
     const videoControls = document.getElementById('videoControls');
     let currentVideoIndex = 0;
+    let videoFiles = [];
+    let shuffledIndices = [];
+    let shuffleEnabled = false;
     let autoPlayEnabled = false;
     let controlsVisible = true;
 
-    // === التعديل هنا: تحديث طريقة جلب قائمة الفيديوهات ===
     function getVideoElements() {
-      const allVideos = state.files.filter(file => file.type === 'video');
-      
-      // إذا كان التشغيل العشوائي مفعّلاً، قم بخلط (Shuffle) الفيديوهات
-      if (state.shuffleEnabled) {
-        // نستخدم نسخة مكررة من المصفوفة لتطبيق الترتيب العشوائي
-        return shuffleArray([...allVideos]); 
-      }
-      
-      return allVideos; // ارجعها بالترتيب الأصلي إذا كان غير مفعّل
+      return state.files.filter(file => file.type === 'video');
     }
 
-    function openVideoOverlay(file) {
-      // === التعديل هنا: يتم تعيين قائمة التشغيل بناءً على حالة الـ Shuffle ===
-      state.videoPlayList = getVideoElements();
-      currentVideoIndex = state.videoPlayList.findIndex(f => f.id === file.id);
-      
-      // إذا لم يكن الملف موجودًا في القائمة الجديدة (خاصة بعد الترتيب العشوائي)، قم بتعيين أول فيديو
-      if (currentVideoIndex === -1 && state.videoPlayList.length > 0) {
-          currentVideoIndex = 0;
-      } else if (state.videoPlayList.length === 0) {
-          return;
+    function generateShuffleOrder(length) {
+      const indices = Array.from({ length }, (_, i) => i);
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
       }
-      // ====================================================================
+      return indices;
+    }
 
-      videoOverlay.style.display = 'block';
-      overlayVideo.src = URL.createObjectURL(state.videoPlayList[currentVideoIndex].file);
-      overlayVideo.play();
+    function toggleShuffle(event) {
+        event.stopPropagation();
+        shuffleEnabled = !shuffleEnabled;
+        updateShuffleButton();
+        
+        if (shuffleEnabled) {
+            videoFiles = getVideoElements();
+            if (videoFiles.length > 0) {
+                shuffledIndices = generateShuffleOrder(videoFiles.length);
+                const currentFileIndex = videoFiles.findIndex(file => file.id === state.currentlyPlaying);
+                
+                const currentShuffleIndex = shuffledIndices.findIndex(index => index === currentFileIndex);
+                if (currentShuffleIndex !== -1) {
+                    [shuffledIndices[0], shuffledIndices[currentShuffleIndex]] = [shuffledIndices[currentShuffleIndex], shuffledIndices[0]];
+                }
+                currentVideoIndex = 0;
+                loadCurrentVideo();
+            }
+        } else {
+            videoFiles = getVideoElements();
+            if (state.currentlyPlaying) {
+                currentVideoIndex = videoFiles.findIndex(file => file.id === state.currentlyPlaying);
+            } else {
+                currentVideoIndex = 0;
+            }
+        }
+    }
+
+    function updateShuffleButton() {
+        const button = document.querySelector('#videoControls button[onclick="toggleShuffle(event)"]');
+        if (button) {
+            button.textContent = `تشغيل عشوائي: ${shuffleEnabled ? 'ON' : 'OFF'}`;
+            button.style.backgroundColor = shuffleEnabled ? '#f72585aa' : '#4361eeaa';
+        }
+    }
+
+    function openVideoOverlay(videoCard) {
+      const fileId = videoCard.dataset.id;
+      videoFiles = getVideoElements();
+      
+      shuffleEnabled = false;
+      updateShuffleButton(); 
+
+      currentVideoIndex = videoFiles.findIndex(file => file.id === fileId);
+      if (currentVideoIndex === -1) return;
+      state.currentlyPlaying = fileId;
+
+
+      const file = videoFiles[currentVideoIndex];
+      overlayVideo.src = URL.createObjectURL(file.file);
+      overlay.style.display = 'flex';
       document.body.style.overflow = 'hidden';
       showControls();
     }
 
     function closeVideoOverlay() {
-      videoOverlay.style.display = 'none';
+      overlay.style.display = 'none';
       overlayVideo.pause();
       overlayVideo.src = '';
       document.body.style.overflow = '';
-      // لا نغير حالة التشغيل العشوائي هنا، فقط التشغيل التلقائي
-      // autoPlayEnabled = false; 
+      autoPlayEnabled = false;
+      shuffleEnabled = false;
       updateAutoPlayButton();
+      updateShuffleButton();
+      state.currentlyPlaying = null;
     }
 
     function playNextVideo() {
-      // نستخدم state.videoPlayList بدلاً من videoFiles
-      currentVideoIndex = (currentVideoIndex + 1) % state.videoPlayList.length;
-      playCurrentVideo();
+      if (videoFiles.length === 0) return;
+
+      if (shuffleEnabled) {
+        currentVideoIndex = (currentVideoIndex + 1) % videoFiles.length;
+      } else {
+        currentVideoIndex = (currentVideoIndex + 1) % videoFiles.length;
+      }
+      loadCurrentVideo();
     }
 
     function playPrevVideo() {
-      // نستخدم state.videoPlayList بدلاً من videoFiles
-      currentVideoIndex = (currentVideoIndex - 1 + state.videoPlayList.length) % state.videoPlayList.length;
-      playCurrentVideo();
+      if (videoFiles.length === 0) return;
+      
+      if (shuffleEnabled) {
+        currentVideoIndex = (currentVideoIndex - 1 + videoFiles.length) % videoFiles.length;
+      } else {
+        currentVideoIndex = (currentVideoIndex - 1 + videoFiles.length) % videoFiles.length;
+      }
+      loadCurrentVideo();
     }
 
-    function playCurrentVideo() {
-      // نستخدم state.videoPlayList بدلاً من videoFiles
-      const file = state.videoPlayList[currentVideoIndex];
+    function loadCurrentVideo() {
+      if (videoFiles.length === 0) return;
+      
+      let file;
+      if (shuffleEnabled) {
+        const realIndex = shuffledIndices[currentVideoIndex];
+        file = videoFiles[realIndex];
+      } else {
+        file = videoFiles[currentVideoIndex];
+      }
+      
+      state.currentlyPlaying = file.id;
+      
       overlayVideo.src = URL.createObjectURL(file.file);
-      overlayVideo.play();
+      overlayVideo.play().then(() => {
+        if (autoPlayEnabled) {
+          overlayVideo.play();
+        }
+      }).catch(e => console.log('Autoplay prevented:', e));
     }
 
     function toggleAutoPlay(event) {
       event.stopPropagation();
       autoPlayEnabled = !autoPlayEnabled;
       updateAutoPlayButton();
+      
+      if (autoPlayEnabled && overlayVideo.paused) {
+        overlayVideo.play();
+      }
     }
 
     function updateAutoPlayButton() {
-      const button = document.querySelector('.autoplay-toggle-btn');
-      button.textContent = `التشغيل التلقائي: ${autoPlayEnabled ? 'مفعل' : 'غير مفعل'}`;
-    }
-    
-    // === وظيفة جديدة: التبديل بين التشغيل العشوائي والعادي ===
-    function toggleShuffle(event) {
-      event.stopPropagation();
-      state.shuffleEnabled = !state.shuffleEnabled;
-      updateShuffleButton();
-      
-      // إذا كان الفيديو معروضاً، يجب إعادة تعيين قائمة التشغيل
-      if (videoOverlay.style.display === 'block' && state.currentlyPlaying) {
-          const currentFile = state.videoPlayList[currentVideoIndex];
-          openVideoOverlay(currentFile); // إعادة فتح العارض لإنشاء قائمة تشغيل جديدة
+      const button = document.querySelector('#videoControls button[onclick="toggleAutoPlay(event)"]');
+      if (button) {
+        button.textContent = `تشغيل تلقائي: ${autoPlayEnabled ? 'ON' : 'OFF'}`;
+        button.style.backgroundColor = autoPlayEnabled ? '#f72585aa' : '#4361eeaa';
       }
     }
-    
-    // === وظيفة جديدة: تحديث زر التشغيل العشوائي ===
-    function updateShuffleButton() {
-      const button = document.querySelector('.shuffle-toggle-btn');
-      button.textContent = `الترتيب العشوائي: ${state.shuffleEnabled ? 'مفعل' : 'غير مفعل'}`;
-      
-      // الترتيب العشوائي يجب أن يكون مفعّلاً عند الإطلاق وفقاً لطلبك
-      if (state.shuffleEnabled) {
-        button.style.backgroundColor = 'rgba(255, 165, 0, 0.9)'; // لون مميز للعشوائي
-        button.style.color = 'black';
+
+    function toggleControls() {
+      controlsVisible = !controlsVisible;
+      if (controlsVisible) {
+        videoControls.classList.remove('hidden');
       } else {
-        button.style.backgroundColor = 'rgba(32, 178, 170, 0.8)';
-        button.style.color = 'white';
+        videoControls.classList.add('hidden');
       }
     }
 
     function showControls() {
-      videoControls.classList.remove('hidden');
       controlsVisible = true;
-      hideControlsAfterDelay();
+      videoControls.classList.remove('hidden');
+      
+      clearTimeout(window.controlsTimeout);
+      window.controlsTimeout = setTimeout(() => {
+        if (!overlayVideo.paused) {
+          controlsVisible = false;
+          videoControls.classList.add('hidden');
+        }
+      }, 3000);
     }
 
-    function hideControls() {
-      if (!controlsVisible) return;
-      videoControls.classList.add('hidden');
-      controlsVisible = false;
-    }
+    overlay.addEventListener('click', () => {
+      toggleControls();
+    });
 
-    function hideControlsAfterDelay() {
-      clearTimeout(videoControls.hideTimeout);
-      videoControls.hideTimeout = setTimeout(hideControls, 3000);
-    }
+    overlayVideo.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleControls();
+    });
 
-    // Event listeners for video controls
-    videoOverlay.addEventListener('mousemove', () => {
-      if (!controlsVisible) {
+    overlayVideo.addEventListener('play', () => {
+      showControls();
+    });
+    
+    overlayVideo.addEventListener('pause', () => {
         showControls();
-      } else {
-        hideControlsAfterDelay();
-      }
+        clearTimeout(window.controlsTimeout);
     });
 
     overlayVideo.addEventListener('ended', () => {
       if (autoPlayEnabled) {
         playNextVideo();
+      } else {
+        showControls();
       }
     });
 
-    // Image Overlay Functions
-    const imageOverlay = document.getElementById('imageOverlay');
-    const overlayImage = document.getElementById('overlayImage');
-    
-    function openImageOverlay(file) {
-      overlayImage.src = URL.createObjectURL(file.file);
-      imageOverlay.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeImageOverlay() {
-      imageOverlay.style.display = 'none';
-      overlayImage.src = '';
-      document.body.style.overflow = '';
-    }
+    const originalOpenMediaPlayer = window.openMediaPlayer;
+    window.openMediaPlayer = function(file) {
+      if (file.type === 'video') {
+        const videoCard = document.querySelector(`.media-card[data-id="${file.id}"]`);
+        if (videoCard) openVideoOverlay(videoCard);
+      } else {
+        originalOpenMediaPlayer(file);
+      }
+    };
 
     // Initialize the app
-    init();
+    document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
-
