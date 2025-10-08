@@ -5,12 +5,15 @@ const CACHE_NAME = 'media-explorer-cache-v1';
 
 // 2. قائمة بالملفات الأساسية التي يجب تخزينها مؤقتاً عند التثبيت
 const urlsToCache = [
-  // تم تحديث اسم الملف هنا
+  // الملفات الرئيسية
   '/Exercise-plank/index.html', 
   '/Exercise-plank/manifest.json',
+  '/Exercise-plank/', // المسار الجذر
+
+  // الأيقونات (تم التأكد من مسارها المطلق)
   '/Exercise-plank/icon-192x192.png',
   '/Exercise-plank/icon-512x512.png',
-  '/Exercise-plank/', // المسار الجذر (عادةً يشير إلى index.html)
+  '/Exercise-plank/maskable_icon.png', 
 ];
 
 // 3. حدث التثبيت (Install Event)
@@ -20,6 +23,7 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('Service Worker: Caching App Shell');
+        // هنا يتم محاولة جلب وتخزين الملفات بالمسارات المطلقة الجديدة
         return cache.addAll(urlsToCache);
       })
       .catch(err => {
@@ -31,7 +35,7 @@ self.addEventListener('install', (event) => {
 
 // 4. حدث الجلب (Fetch Event)
 self.addEventListener('fetch', (event) => {
-  // لا تقم بالتخزين المؤقت لطلبات YouTube/Google
+  // لا تقم بالتخزين المؤقت لطلبات YouTube/Google (هذا الجزء صحيح)
   if (event.request.url.includes('googleapis.com') || event.request.url.includes('youtube.com')) {
     return;
   }
