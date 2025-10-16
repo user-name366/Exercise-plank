@@ -158,7 +158,7 @@
 
     .content-container {
       flex: 1;
-      /* 🆕 إزالة الهامش الداخلي الجانبي */
+      /* إزالة الهامش الداخلي الجانبي */
       padding: 1.5rem 0; 
       max-width: 1200px;
       margin: 0 auto;
@@ -166,15 +166,15 @@
     }
 
     .media-grid {
-      /* 🆕 عرض عمود واحد على كامل الشاشة */
+      /* عرض عمود واحد على كامل الشاشة */
       display: grid;
       grid-template-columns: 1fr; 
       gap: 1.5rem;
-      /* 🆕 إزالة الهامش الداخلي الجانبي لالتصاق البطاقات بحواف الشاشة */
+      /* إزالة الهامش الداخلي الجانبي لالتصاق البطاقات بحواف الشاشة */
       padding: 5; 
     }
 
-    /* ❌ تم حذف قواعد Media Query للشبكة */
+    /* تم حذف قواعد Media Query للشبكة */
 
     .media-card {
       background-color: white;
@@ -195,7 +195,7 @@
     .media-thumbnail {
       position: relative;
       width: 100%;
-      /* 🆕 زيادة الارتفاع إلى 70% */
+      /* زيادة الارتفاع إلى 70% */
       padding-top: 110%; 
       background-color: var(--light-gray);
       overflow: hidden;
@@ -368,28 +368,12 @@
       margin-bottom: 1rem;
     }
 
-    .floating-action-btn {
-      position: fixed;
-      bottom: 1.5rem;
-      right: 1.5rem;
-      background-color: var(--secondary);
-      color: white;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      cursor: pointer;
-      z-index: 100;
-      transition: var(--transition);
+      .floating-action-btn {
+      position: fixed; bottom: 1.5rem; right: 1.5rem; background-color: var(--secondary); color: white;
+      width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); cursor: pointer; z-index: 100; transition: all 0.3s;
     }
-
-    .floating-action-btn:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-    }
+    .floating-action-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5); }
 
     .alert-message {
       background-color: #fff3cd;
@@ -431,7 +415,7 @@
     #youtube-content {
       display: none;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 1rem;
     }
 
     .youtube-search-bar {
@@ -605,6 +589,97 @@
         background-color: var(--gray);
         cursor: not-allowed;
     }
+    
+    /* 🆕 خلفية الفيديو سوداء بالكامل */
+    #videoOverlay {
+        background: black !important;
+    }
+
+    /* 🆕 نمط ملء الشاشة للفيديو داخل طبقة العرض */
+    #overlayVideo {
+      width: 100vw !important; /* ملء عرض الشاشة بالكامل */
+      height: 100vh !important; /* ملء ارتفاع الشاشة بالكامل */
+      max-width: 100vw !important;
+      max-height: 100vh !important;
+      object-fit: contain; /* للحفاظ على نسبة العرض دون قص */
+    }
+    
+    /* 🆕 تحسين سلاسة التمرير لطبقة الفيديو العلوية */
+    #videoScroller {
+      /* إبقاء overflow-y: scroll لمنع السلوك الافتراضي للمتصفح على اللمس */
+      overflow-y: scroll;
+      scroll-behavior: smooth; 
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #videoScroller::-webkit-scrollbar {
+      display: none;
+    }
+    
+    /* 🆕 نمط موحد لأزرار التحكم */
+    .media-control-btn {
+      background-color: #4361eeaa;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s, transform 0.3s;
+      margin: 5px;
+      pointer-events: auto;
+    }
+    .media-control-btn:hover {
+        background-color: #3a0ca3aa;
+        transform: translateY(-2px);
+    }
+    
+    /* 🆕 أزرار التحكم العلوية */
+    #topVideoControls {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        left: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        pointer-events: none; /* لتمرير النقرات إلى الفيديو أسفله */
+        z-index: 10;
+    }
+
+    #topVideoControls > div {
+        pointer-events: auto; /* لجعل الحاويات الداخلية قابلة للتفاعل */
+        display: flex;
+        gap: 10px;
+    }
+    
+    /* 🆕 أزرار التحكم الرئيسية (الإغلاق) */
+    #closeVideoBtn {
+        background: #ff0000aa;
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: auto; 
+    }
+    
+    /* إخفاء controls-wrap عند إخفاء الـ controls */
+    .video-controls.hidden #topVideoControls {
+        opacity: 0;
+    }
+    #topVideoControls {
+        transition: opacity 0.3s ease;
+    }
 
   </style>
 </head>
@@ -715,21 +790,26 @@
     </div>
   </div>
 
-  <div id="videoOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:1000;">
-    <div style="position:relative;width:100%;height:100%;display:flex;justify-content:center;align-items:center;">
-      <video id="overlayVideo" style="width:90%;height:90%;max-height:90vh;border-radius: 10px;" controls autoplay></video>
+  <div id="videoOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:1000;">
+    
+    <div id="topVideoControls">
+        <div>
+            <button class="media-control-btn" onclick="toggleShuffle(event)" style="padding: 8px 12px; font-size: 14px;">عشوائي: OFF</button>
+            <button class="media-control-btn" onclick="toggleAutoPlay(event)" style="padding: 8px 12px; font-size: 14px;">تلقائي: OFF</button>
+        </div>
+        <button id="closeVideoBtn" onclick="closeVideoOverlay(event)">✕</button>
+    </div>
 
-      <div class="video-controls" id="videoControls">
-        <button onclick="closeVideoOverlay()" style="position:absolute;top:20px;right:20px;background:#ff0000aa;color:white;border:none;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:20px;">✕</button>
+    <div id="videoScroller" style="position:relative;width:100%;height:100%;">
+      
+      <div id="currentVideoContainer" style="width:100%;height:100vh;flex-shrink: 0; display:flex;justify-content:center;align-items:center;">
+        <video id="overlayVideo" style="width:100%;height:100%;border-radius: 0px;" controls autoplay></video>
 
-        <button onclick="playPrevVideo()" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);background:#4361eeaa;color:white;border:none;width:50px;height:50px;border-radius:50%;cursor:pointer;font-size:24px;">⏮</button>
-
-        <button onclick="playNextVideo()" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);background:#4361eeaa;color:white;border:none;width:50px;height:50px;border-radius:50%;cursor:pointer;font-size:24px;">⏭</button>
-
-        <button onclick="toggleShuffle(event)" style="position:absolute;right:20px;bottom:20px;background:#4361eeaa;color:white;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;font-size:14px;">تشغيل عشوائي: OFF</button>
-        
-        <button onclick="toggleAutoPlay(event)" style="position:absolute;left:20px;bottom:20px;background:#4361eeaa;color:white;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;font-size:14px;">تشغيل تلقائي: OFF</button>
+        <div class="video-controls" id="videoControls">
+          
+        </div>
       </div>
+      
     </div>
   </div>
   
@@ -763,7 +843,7 @@
       currentlyPlaying: null,
       isLoading: false,
       youtubeSearchType: 'video',
-      youtubeNextPageToken: null, // حالة جديدة لتخزين مفتاح الصفحة التالية
+      youtubeNextPageToken: null, 
       counts: {
         all: 0,
         image: 0,
@@ -806,6 +886,7 @@
 
     // Constants
     const BATCH_SIZE = 12;
+    // ملاحظة: مفتاح API هذا غير صالح. يجب استبداله بمفتاحك الحقيقي.
     const YOUTUBE_API_KEY = 'AIzaSyBI5_bMERLQgiMHNcQCOHreTT6Kzzu_D2I'; 
     const MAX_YOUTUBE_RESULTS = 50; 
 
@@ -1004,12 +1085,12 @@
                 id = item.id.playlistId;
                 title = item.snippet.title;
                 // رابط قائمة التشغيل يفتح في نافذة جديدة
-                clickHandler = () => window.open(`https://www.youtube.com/playlist?list=${id}`, '_blank');
+                clickHandler = () => window.open(`http://googleusercontent.com/youtube.com/9{id}`, '_blank');
             } else if (type === 'channel') {
                 id = item.id.channelId;
                 title = item.snippet.channelTitle;
                 // رابط القناة يفتح في نافذة جديدة
-                clickHandler = () => window.open(`https://www.youtube.com/channel/${id}`, '_blank');
+                clickHandler = () => window.open(`https://www.youtube.com/channel/$0{id}`, '_blank');
             }
             
             card.addEventListener('click', clickHandler);
@@ -1076,7 +1157,7 @@
     
     function openYoutubePlayer(videoId, title) {
         const youtubeIframe = document.getElementById('youtubeIframe');
-        youtubeIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        youtubeIframe.src = `https://www.youtube.com/channel/$1{videoId}?autoplay=1`;
         document.getElementById('youtubePlayerOverlay').style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
@@ -1378,18 +1459,25 @@
       elements.tabBadges.youtube.textContent = state.counts.youtube > 0 ? state.counts.youtube : '';
     }
     
-    // --- وظائف مشغل الفيديو (Video Overlay) مع التشغيل العشوائي ---
+    // --- وظائف مشغل الفيديو (Video Overlay) مع التشغيل العشوائي والتمرير الجديد ---
 
     const overlay = document.getElementById('videoOverlay');
     const overlayVideo = document.getElementById('overlayVideo');
-    const videoControls = document.getElementById('videoControls');
+    const videoControls = document.getElementById('videoControls'); 
+    const closeVideoBtn = document.getElementById('closeVideoBtn');
+    const topVideoControls = document.getElementById('topVideoControls'); 
+    const videoScroller = document.getElementById('videoScroller');
+    
+    let touchStartY = 0; 
+    let isSwiping = false; 
+
     let currentVideoIndex = 0;
     let videoFiles = [];
     let shuffledIndices = [];
     let shuffleEnabled = false;
     let autoPlayEnabled = false;
     let controlsVisible = true;
-
+    
     function getVideoElements() {
       return state.files.filter(file => file.type === 'video');
     }
@@ -1408,33 +1496,35 @@
         shuffleEnabled = !shuffleEnabled;
         updateShuffleButton();
         
+        videoFiles = getVideoElements();
+        if (videoFiles.length === 0) return;
+
         if (shuffleEnabled) {
-            videoFiles = getVideoElements();
-            if (videoFiles.length > 0) {
-                shuffledIndices = generateShuffleOrder(videoFiles.length);
-                const currentFileIndex = videoFiles.findIndex(file => file.id === state.currentlyPlaying);
-                
-                const currentShuffleIndex = shuffledIndices.findIndex(index => index === currentFileIndex);
-                if (currentShuffleIndex !== -1) {
-                    [shuffledIndices[0], shuffledIndices[currentShuffleIndex]] = [shuffledIndices[currentShuffleIndex], shuffledIndices[0]];
-                }
-                currentVideoIndex = 0;
-                loadCurrentVideo();
+            shuffledIndices = generateShuffleOrder(videoFiles.length);
+            const currentFileIndex = videoFiles.findIndex(file => file.id === state.currentlyPlaying);
+            
+            const currentShuffleIndex = shuffledIndices.findIndex(index => index === currentFileIndex);
+            if (currentShuffleIndex !== -1) {
+                // نقل الفيديو الحالي إلى بداية قائمة الترتيب العشوائي
+                [shuffledIndices[0], shuffledIndices[currentShuffleIndex]] = [shuffledIndices[currentShuffleIndex], shuffledIndices[0]];
             }
+            currentVideoIndex = 0;
+            loadCurrentVideo();
         } else {
-            videoFiles = getVideoElements();
+            // العودة إلى الترتيب الأصلي والبحث عن الفيديو الحالي
             if (state.currentlyPlaying) {
                 currentVideoIndex = videoFiles.findIndex(file => file.id === state.currentlyPlaying);
             } else {
                 currentVideoIndex = 0;
             }
+             loadCurrentVideo(); 
         }
     }
 
     function updateShuffleButton() {
-        const button = document.querySelector('#videoControls button[onclick="toggleShuffle(event)"]');
+        const button = document.querySelector('#topVideoControls button[onclick="toggleShuffle(event)"]');
         if (button) {
-            button.textContent = `تشغيل عشوائي: ${shuffleEnabled ? 'ON' : 'OFF'}`;
+            button.textContent = `عشوائي: ${shuffleEnabled ? 'ON' : 'OFF'}`;
             button.style.backgroundColor = shuffleEnabled ? '#f72585aa' : '#4361eeaa';
         }
     }
@@ -1450,15 +1540,36 @@
       if (currentVideoIndex === -1) return;
       state.currentlyPlaying = fileId;
 
-
-      const file = videoFiles[currentVideoIndex];
-      overlayVideo.src = URL.createObjectURL(file.file);
       overlay.style.display = 'flex';
       document.body.style.overflow = 'hidden';
+      
+      loadCurrentVideo(true); 
+      
+      // ❌ إزالة مستمع wheel بناءً على طلبك
+      // overlay.removeEventListener('wheel', handleVideoWheel, { passive: false });
+      
+      // 🆕 إضافة مستمع اللمس (touch) للجوالات
+      overlay.addEventListener('touchstart', handleTouchStart, { passive: true });
+      overlay.addEventListener('touchend', handleTouchEnd, { passive: false });
+      
       showControls();
     }
 
-    function closeVideoOverlay() {
+    // *** دالة الإغلاق المصححة لضمان عدم تداخل الأحداث ***
+    function closeVideoOverlay(e) {
+      // إيقاف نشر الحدث إلى العناصر الأب (Overlay) لحل مشكلة الإغلاق
+      if (e) {
+          e.stopPropagation(); 
+          e.preventDefault(); 
+      }
+      
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      }
+      if (document.pictureInPictureElement) {
+        document.exitPictureInPicture();
+      }
+
       overlay.style.display = 'none';
       overlayVideo.pause();
       overlayVideo.src = '';
@@ -1468,31 +1579,39 @@
       updateAutoPlayButton();
       updateShuffleButton();
       state.currentlyPlaying = null;
+      
+      // 🆕 إزالة مستمعات اللمس عند الإغلاق
+      overlay.removeEventListener('touchstart', handleTouchStart, { passive: true });
+      overlay.removeEventListener('touchend', handleTouchEnd, { passive: false });
+      
+      clearTimeout(window.controlsTimeout);
     }
 
     function playNextVideo() {
       if (videoFiles.length === 0) return;
-
-      if (shuffleEnabled) {
-        currentVideoIndex = (currentVideoIndex + 1) % videoFiles.length;
-      } else {
-        currentVideoIndex = (currentVideoIndex + 1) % videoFiles.length;
+      
+      if (!shuffleEnabled && currentVideoIndex === videoFiles.length - 1) {
+          // إذا كان الفيديو الأخير، لا تفعل شيئاً
+          return;
       }
+
+      currentVideoIndex = (currentVideoIndex + 1) % videoFiles.length;
       loadCurrentVideo();
     }
 
     function playPrevVideo() {
       if (videoFiles.length === 0) return;
       
-      if (shuffleEnabled) {
-        currentVideoIndex = (currentVideoIndex - 1 + videoFiles.length) % videoFiles.length;
-      } else {
-        currentVideoIndex = (currentVideoIndex - 1 + videoFiles.length) % videoFiles.length;
+      if (!shuffleEnabled && currentVideoIndex === 0) {
+          // إذا كان الفيديو الأول، لا تفعل شيئاً
+          return;
       }
+
+      currentVideoIndex = (currentVideoIndex - 1 + videoFiles.length) % videoFiles.length;
       loadCurrentVideo();
     }
 
-    function loadCurrentVideo() {
+    function loadCurrentVideo(isInitialLoad = false) { 
       if (videoFiles.length === 0) return;
       
       let file;
@@ -1511,6 +1630,14 @@
           overlayVideo.play();
         }
       }).catch(e => console.log('Autoplay prevented:', e));
+      
+      // التمركز: بما أن هناك فيديو واحد فقط، دائمًا ما يكون الموضع 0
+      if (videoScroller) {
+          videoScroller.scrollTo({ 
+              top: 0, 
+              behavior: 'auto' 
+          });
+      }
     }
 
     function toggleAutoPlay(event) {
@@ -1524,37 +1651,86 @@
     }
 
     function updateAutoPlayButton() {
-      const button = document.querySelector('#videoControls button[onclick="toggleAutoPlay(event)"]');
-      if (button) {
-        button.textContent = `تشغيل تلقائي: ${autoPlayEnabled ? 'ON' : 'OFF'}`;
-        button.style.backgroundColor = autoPlayEnabled ? '#f72585aa' : '#4361eeaa';
-      }
+        const button = document.querySelector('#topVideoControls button[onclick="toggleAutoPlay(event)"]');
+        if (button) {
+            button.textContent = `تلقائي: ${autoPlayEnabled ? 'ON' : 'OFF'}`;
+            button.style.backgroundColor = autoPlayEnabled ? '#f72585aa' : '#4361eeaa';
+        }
     }
 
     function toggleControls() {
       controlsVisible = !controlsVisible;
       if (controlsVisible) {
         videoControls.classList.remove('hidden');
+        topVideoControls.classList.remove('hidden');
       } else {
         videoControls.classList.add('hidden');
+        topVideoControls.classList.add('hidden');
       }
+      
+      // إعادة ضبط المؤقت
+      showControls();
     }
 
     function showControls() {
       controlsVisible = true;
       videoControls.classList.remove('hidden');
+      topVideoControls.classList.remove('hidden');
       
       clearTimeout(window.controlsTimeout);
       window.controlsTimeout = setTimeout(() => {
         if (!overlayVideo.paused) {
           controlsVisible = false;
           videoControls.classList.add('hidden');
+          topVideoControls.classList.add('hidden');
         }
       }, 3000);
     }
+    
+    // ❌ دالة عجلة الماوس لم تعد مستخدمة:
+    // function handleVideoWheel(e) { /* ... */ }
 
-    overlay.addEventListener('click', () => {
-      toggleControls();
+    // *** وظائف معالجة اللمس (Touch Handling) المحسّنة ***
+    function handleTouchStart(e) {
+        if (e.touches.length === 1) {
+            touchStartY = e.touches[0].clientY;
+            isSwiping = false;
+        }
+    }
+
+    function handleTouchEnd(e) {
+        if (e.changedTouches.length === 1 && videoFiles.length > 1) {
+            const touchEndY = e.changedTouches[0].clientY;
+            const deltaY = touchEndY - touchStartY;
+            const SWIPE_THRESHOLD = 50; // حد المسافة للتمرير (Flick)
+            
+            // تحقق من حركة السحب القوية (Flick)
+            if (Math.abs(deltaY) > SWIPE_THRESHOLD && !isSwiping) {
+                isSwiping = true;
+                
+                // منع التمرير الافتراضي للمتصفح (Scroll)
+                e.preventDefault(); 
+                
+                if (deltaY < 0) {
+                    // السحب للأعلى (End Y < Start Y): الفيديو التالي
+                    playNextVideo();
+                } else {
+                    // السحب للأسفل (End Y > Start Y): الفيديو السابق
+                    playPrevVideo();
+                }
+                
+                // إعادة ضبط حالة السحب بعد فترة قصيرة للسماح بسحبة جديدة
+                setTimeout(() => { isSwiping = false; }, 500); 
+            }
+        }
+    }
+
+    // *** مستمع النقر على الـ Overlay للتحكم بالواجهة ***
+    overlay.addEventListener('click', (e) => {
+      // نتحقق مما إذا كان الهدف هو عنصر تحكم (زر أو منطقة تحكم)
+      if (!e.target.closest('#topVideoControls')) {
+          toggleControls();
+      }
     });
 
     overlayVideo.addEventListener('click', (e) => {
@@ -1588,6 +1764,9 @@
         originalOpenMediaPlayer(file);
       }
     };
+
+    // قم بتعريض الدالة المطلوبة عالمياً لاستخدامها في onclick بالـ HTML
+    window.closeVideoOverlay = closeVideoOverlay; 
 
     // Initialize the app
     document.addEventListener('DOMContentLoaded', init);
