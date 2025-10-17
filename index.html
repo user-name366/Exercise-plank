@@ -146,7 +146,7 @@
       top: 4px;
       right: 4px;
       background-color: var(--secondary);
-      color: --light-black;
+      color: white; /* تم تعديل اللون ليتوافق مع الخلفية الداكنة */
       border-radius: 50%;
       width: 18px;
       height: 18px;
@@ -797,6 +797,26 @@
             <button class="media-control-btn" onclick="toggleShuffle(event)" style="padding: 8px 12px; font-size: 14px;">عشوائي: OFF</button>
             <button class="media-control-btn" onclick="toggleAutoPlay(event)" style="padding: 8px 12px; font-size: 14px;">تلقائي: OFF</button>
         </div>
+        <div style="position: relative;">
+            <button id="stopTimerBtn" class="media-control-btn" onclick="toggleStopOptions(event)" style="background-color: #00bfa5aa; color: white;">
+                ⚙️ إيقاف 
+            </button>
+            <div id="stopOptionsDropdown" style="
+                position: absolute; 
+                top: 100%; 
+                right: 0; 
+                background: rgba(45, 45, 45, 0.95); 
+                border-radius: 5px; 
+                box-shadow: 0 4px 8px rgba(0,0,0,0.5); 
+                padding: 10px; 
+                display: none; 
+                flex-direction: column; 
+                gap: 5px; 
+                min-width: 150px;
+                z-index: 1000;
+            ">
+            </div>
+        </div>
         <button id="closeVideoBtn" onclick="closeVideoOverlay(event)">✕</button>
     </div>
 
@@ -1085,12 +1105,12 @@
                 id = item.id.playlistId;
                 title = item.snippet.title;
                 // رابط قائمة التشغيل يفتح في نافذة جديدة
-                clickHandler = () => window.open(`http://googleusercontent.com/youtube.com/9{id}`, '_blank');
+                clickHandler = () => window.open(`https://www.youtube.com/playlist?list=${id}`, '_blank');
             } else if (type === 'channel') {
                 id = item.id.channelId;
                 title = item.snippet.channelTitle;
                 // رابط القناة يفتح في نافذة جديدة
-                clickHandler = () => window.open(`https://www.youtube.com/channel/$0{id}`, '_blank');
+                clickHandler = () => window.open(`https://www.youtube.com/channel/${id}`, '_blank');
             }
             
             card.addEventListener('click', clickHandler);
@@ -1157,7 +1177,7 @@
     
     function openYoutubePlayer(videoId, title) {
         const youtubeIframe = document.getElementById('youtubeIframe');
-        youtubeIframe.src = `https://www.youtube.com/channel/$1{videoId}?autoplay=1`;
+        youtubeIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
         document.getElementById('youtubePlayerOverlay').style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
@@ -1478,6 +1498,10 @@
     let autoPlayEnabled = false;
     let controlsVisible = true;
     
+    // 🆕 متغيرات مؤقت الإيقاف
+    let stopAfterCount = 0; // 0 يعني لا يوجد مؤقت، 1 يعني المقطع الحالي، 2 يعني بعد مقطع، وهكذا
+    const maxStopCount = 10; // الحد الأقصى لعدد الفيديوهات المسموح به
+
     function getVideoElements() {
       return state.files.filter(file => file.type === 'video');
     }
@@ -1528,6 +1552,101 @@
             button.style.backgroundColor = shuffleEnabled ? '#f72585aa' : '#4361eeaa';
         }
     }
+    
+    // 🆕 وظيفة عرض/إخفاء القائمة المنسدلة لخيارات الإيقاف
+    function toggleStopOptions(event) {
+        event.stopPropagation();
+        const dropdown = document.getElementById('stopOptionsDropdown');
+        dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+        if (dropdown.style.display === 'flex') {
+            renderStopOptions();
+        }
+    }
+
+    // 🆕 وظيفة لملء القائمة المنسدلة بخيارات الإيقاف
+    function renderStopOptions() {
+        const dropdown = document.getElementById('stopOptionsDropdown');
+        const totalVideos = videoFiles.length;
+        dropdown.innerHTML = '';
+        
+        // 1. خيار إيقاف المؤقت (لا شيء)
+        createOption(dropdown, 'إيقاف المؤقت', 0);
+        
+        // 2. خيار المقطع الحالي
+        createOption(dropdown, 'إيقاف بعد المقطع الحالي', 1);
+
+        // 3. خيارات عدد الفيديوهات (من 2 إلى 10)
+        // نحسب الفيديوهات المتبقية في القائمة الأصلية
+        const currentFileIndex = videoFiles.findIndex(file => file.id === state.currentlyPlaying);
+        const remainingVideos = totalVideos - currentFileIndex;
+        
+        // الحد الأقصى للعد هو إما 10 أو إجمالي الفيديوهات المتبقية (أيهما أقل)
+        const maxCount = Math.min(maxStopCount, remainingVideos - 1); 
+        
+        for (let i = 2; i <= maxCount; i++) {
+            createOption(dropdown, `إيقاف بعد ${i} مقاطع`, i);
+        }
+        
+        // 4. خيار لآخر القائمة (إذا كان هناك أكثر من 10 فيديوهات متبقية)
+        if (remainingVideos > maxStopCount) {
+             createOption(dropdown, `إيقاف بعد آخر مقطع (${remainingVideos} مقطع)`, remainingVideos);
+        } else if (remainingVideos > 1) {
+            // في حالة كان عدد الفيديوهات المتبقية قليل، ولكن لم نصل لآخر القائمة بعد
+            createOption(dropdown, `إيقاف بعد آخر مقطع (${remainingVideos} مقطع)`, remainingVideos);
+        }
+    }
+
+    // 🆕 دالة مساعدة لإنشاء خيار
+    function createOption(dropdown, text, count) {
+        const option = document.createElement('button');
+        option.textContent = text;
+        option.classList.add('media-control-btn');
+        // إذا كانت هذه هي القيمة المحددة حاليًا، أضف نمطًا مختلفًا
+        if (stopAfterCount === count) {
+            option.style.backgroundColor = '#2ecc71aa'; // لون أخضر للإشارة إلى التفعيل
+        } else {
+            option.style.backgroundColor = '#7f8c8daa'; // لون رمادي للخيار غير المفعل
+        }
+        option.style.padding = '5px 10px';
+        option.style.fontSize = '12px';
+        option.style.justifyContent = 'flex-start'; // محاذاة النص لليسار
+        
+        option.onclick = (e) => setStopTimer(e, count, text);
+        dropdown.appendChild(option);
+    }
+    
+    // 🆕 وظيفة تعيين مؤقت الإيقاف
+    function setStopTimer(event, count, text) {
+        event.stopPropagation();
+        stopAfterCount = count;
+        
+        const stopTimerBtn = document.getElementById('stopTimerBtn');
+        
+        if (stopAfterCount === 0) {
+            stopTimerBtn.innerHTML = '⚙️ إيقاف';
+            stopTimerBtn.style.backgroundColor = '#00bfa5aa';
+            alert('تم إلغاء مؤقت الإيقاف التلقائي.');
+        } else {
+            // نحتاج لحساب عدد المقاطع المتبقية فعلياً بناءً على الخيار
+            let alertText = text;
+            if (count === 1) {
+                alertText = 'المقطع الحالي';
+            } else if (count > 1) {
+                alertText = `${count} مقاطع`;
+            }
+            
+            stopTimerBtn.innerHTML = `⏳ ${alertText}`;
+            stopTimerBtn.style.backgroundColor = '#e67e22aa'; // لون برتقالي للإشارة إلى تفعيل المؤقت
+            alert(`تم تعيين مؤقت الإيقاف التلقائي: ${alertText}`);
+        }
+        
+        // إغلاق القائمة المنسدلة
+        document.getElementById('stopOptionsDropdown').style.display = 'none';
+        
+        // نضمن تحديث خيارات التظليل عند إعادة فتح القائمة
+        renderStopOptions();
+    }
+
 
     function openVideoOverlay(videoCard) {
       const fileId = videoCard.dataset.id;
@@ -1539,14 +1658,19 @@
       currentVideoIndex = videoFiles.findIndex(file => file.id === fileId);
       if (currentVideoIndex === -1) return;
       state.currentlyPlaying = fileId;
+      
+      // 🆕 إعادة تعيين المؤقت وزر الواجهة عند فتح مشغل جديد
+      stopAfterCount = 0; 
+      const stopTimerBtn = document.getElementById('stopTimerBtn');
+      if (stopTimerBtn) {
+          stopTimerBtn.innerHTML = '⚙️ إيقاف';
+          stopTimerBtn.style.backgroundColor = '#00bfa5aa';
+      }
 
       overlay.style.display = 'flex';
       document.body.style.overflow = 'hidden';
       
       loadCurrentVideo(true); 
-      
-      // ❌ إزالة مستمع wheel بناءً على طلبك
-      // overlay.removeEventListener('wheel', handleVideoWheel, { passive: false });
       
       // 🆕 إضافة مستمع اللمس (touch) للجوالات
       overlay.addEventListener('touchstart', handleTouchStart, { passive: true });
@@ -1576,6 +1700,15 @@
       document.body.style.overflow = '';
       autoPlayEnabled = false;
       shuffleEnabled = false;
+      
+      // 🆕 إعادة تعيين مؤقت الإيقاف
+      stopAfterCount = 0; 
+      const stopTimerBtn = document.getElementById('stopTimerBtn');
+      if (stopTimerBtn) {
+          stopTimerBtn.innerHTML = '⚙️';
+          stopTimerBtn.style.backgroundColor = '#00bfa5aa';
+      }
+      
       updateAutoPlayButton();
       updateShuffleButton();
       state.currentlyPlaying = null;
@@ -1687,9 +1820,6 @@
       }, 3000);
     }
     
-    // ❌ دالة عجلة الماوس لم تعد مستخدمة:
-    // function handleVideoWheel(e) { /* ... */ }
-
     // *** وظائف معالجة اللمس (Touch Handling) المحسّنة ***
     function handleTouchStart(e) {
         if (e.touches.length === 1) {
@@ -1748,6 +1878,30 @@
     });
 
     overlayVideo.addEventListener('ended', () => {
+      // 🆕 منطق مؤقت الإيقاف
+      if (stopAfterCount > 0) {
+          stopAfterCount--;
+          if (stopAfterCount === 0) {
+              // المؤقت وصل للصفر، أوقف التشغيل وأغلق الـ Overlay
+              alert('تم الوصول إلى عدد المقاطع المحددة. إيقاف التشغيل التلقائي.');
+              closeVideoOverlay(); 
+              return; // أوقف تنفيذ باقي الدالة
+          } else {
+              // المؤقت لم يصل للصفر بعد، فقط حدث نص الزر
+              const stopTimerBtn = document.getElementById('stopTimerBtn');
+              let remainingText = '';
+              if (stopAfterCount === 1) {
+                  remainingText = 'مقطع واحد متبقٍ';
+              } else {
+                  remainingText = `${stopAfterCount} مقاطع متبقية`;
+              }
+              stopTimerBtn.innerHTML = `⏳ ${remainingText}`;
+              // تحديث الخيارات المنسدلة لإظهار القيمة الجديدة
+              renderStopOptions(); 
+          }
+      }
+      
+      // المنطق الأصلي (تشغيل التالي إذا كان التلقائي مفعلاً)
       if (autoPlayEnabled) {
         playNextVideo();
       } else {
@@ -1765,8 +1919,10 @@
       }
     };
 
-    // قم بتعريض الدالة المطلوبة عالمياً لاستخدامها في onclick بالـ HTML
+    // قم بتعريض الدوال المطلوبة عالمياً لاستخدامها في onclick بالـ HTML
     window.closeVideoOverlay = closeVideoOverlay; 
+    window.toggleStopOptions = toggleStopOptions; // 🆕
+    window.setStopTimer = setStopTimer; // 🆕
 
     // Initialize the app
     document.addEventListener('DOMContentLoaded', init);
